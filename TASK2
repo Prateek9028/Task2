@@ -1,0 +1,40 @@
+def calculate_min_coins(change, denominations, coins_available):
+    # Sort the denominations in decreasing order
+    denominations = sorted(denominations, reverse=True)
+    
+    # Initialize an empty list to store the coins
+    coins = []
+    
+    # Loop through the denominations and calculate the minimum number of coins required
+    for denomination in denominations:
+        # Check if there are coins available for this denomination
+        if coins_available[denomination] > 0:
+            while change >= denomination and coins_available[denomination] > 0:
+                coins.append(denomination)
+                change -= denomination
+                coins_available[denomination] -= 1
+    
+    # If change is not zero after processing all denominations, return an empty list to indicate that change cannot be made
+    if change > 0:
+        return []
+    
+    # Return the list of coins
+    return coins
+
+# Take input from the user for the change amount, denominations, and available coins
+change = int(input("Enter the amount of change required: "))
+denominations_str = input("Enter the denominations available, separated by commas: ")
+denominations = [int(denomination) for denomination in denominations_str.split(",")]
+coins_available_str = input("Enter the number of coins available for each denomination, separated by commas: ")
+coins_available = {}
+for i, denomination in enumerate(denominations):
+    coins_available[denomination] = int(coins_available_str.split(",")[i])
+
+# Calculate the minimum number of coins required
+min_coins = calculate_min_coins(change, denominations, coins_available)
+
+# Print the result
+if not min_coins:
+    print("Cannot make change with the available coins.")
+else:
+    print("The minimum number of coins required to make up {} cents is: {}".format(change, min_coins))
